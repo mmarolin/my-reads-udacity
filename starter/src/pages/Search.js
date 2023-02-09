@@ -1,24 +1,29 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
-import { search, update } from "../BooksAPI";
+import { search } from "../BooksAPI";
 import BookList from "../components/BookList";
-const SearchPage = () => {
+
+const SearchPage = ({ books, updateBookShelf }) => {
   const [query, setQuery] = useState("");
-
   const [searchedBooks, setSearchedBooks] = useState([]);
-
-  const updateBookShelf = useCallback(async (book, shelf) => {
-    await update(book, shelf);
-  }, []);
 
   useEffect(() => {
     const searchBooks = async () => {
-      const res = await search(query, "10");
+      const res = await search(query, 10);
 
       if (res?.items) {
         setSearchedBooks([]);
       } else {
+        res.forEach((r) => {
+          const book = books.find((b) => b.id === r.id);
+          if (book) {
+            r.shelf = book.shelf;
+          } else {
+            r.shelf = "none";
+          }
+        });
+
         setSearchedBooks(res);
       }
     };
@@ -53,7 +58,7 @@ const SearchPage = () => {
           <div className="search-books-results">
             <BookList
               books={searchedBooks}
-              category={"searched books"}
+              category={"Search books"}
               updateBookShelf={updateBookShelf}
             />
           </div>

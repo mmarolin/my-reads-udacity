@@ -1,45 +1,15 @@
-import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
 import "../App.css";
-import { getAll, update } from "../BooksAPI";
+
+import { Link } from "react-router-dom";
 import BookList from "../components/BookList";
 
-const HomePage = () => {
-  const [books, setBooks] = useState([]);
-  const [booksUpdated, setBooksUpdated] = useState(false);
-
-  const updateBookShelf = useCallback(async (book, shelf) => {
-    await update(book, shelf);
-    setBooksUpdated(true);
-  }, []);
-
-  useEffect(() => {
-    const getBooks = async () => {
-      const res = await getAll();
-      setBooks(res);
-    };
-
-    getBooks();
-  }, []);
-
-  useEffect(() => {
-    const refetchBooks = async () => {
-      const res = await getAll();
-      setBooks(res);
-      setBooksUpdated(false);
-    };
-
-    refetchBooks();
-  }, [booksUpdated]);
-
+const HomePage = ({ books, updateBookShelf }) => {
   const readBooks = books.filter((b) => b.shelf === "read");
   const currentlyReadingBooks = books.filter(
     (b) => b.shelf === "currentlyReading"
   );
   const wantToReadBooks = books.filter((b) => b.shelf === "wantToRead");
 
-  console.log(readBooks);
   return (
     <div className="app">
       <div className="list-books">

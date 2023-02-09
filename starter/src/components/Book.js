@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { update } from "../BooksAPI";
 
 const Book = ({ book, updateBookShelf }) => {
   const { title, imageLinks, authors } = book;
@@ -7,7 +6,7 @@ const Book = ({ book, updateBookShelf }) => {
   const [selectedShelf, setSelectedShelf] = useState(book.shelf);
 
   return (
-    <li key={book.id}>
+    <li>
       <div className="book">
         <div className="book-top">
           <div
@@ -28,7 +27,9 @@ const Book = ({ book, updateBookShelf }) => {
                 updateBookShelf(book, e.target.value);
               }}
             >
-              <option value="">Move to...</option>
+              <option value="" disabled>
+                Move to...
+              </option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>
               <option value="read">Read</option>
@@ -37,7 +38,7 @@ const Book = ({ book, updateBookShelf }) => {
           </div>
         </div>
         <div className="book-title">{title}</div>
-        <div className="book-authors">{authors}</div>
+        <div className="book-authors">{authors.join(", ")}</div>
       </div>
     </li>
   );
